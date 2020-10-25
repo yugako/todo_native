@@ -1,15 +1,28 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
 import {connect} from 'react-redux';
 
 function TodoItem(props) {
+    const [toggleCheckBox, setToggleCheckBox] = useState(false);
+
+    const setTodoStatus = (value, id) => {
+        setToggleCheckBox(value);
+
+        if(toggleCheckBox) {
+            props.onComplete({value, id});
+        }
+    }
 
     return (
         <View style={styles.container}>
-            <CheckBox />
+            <CheckBox
+                disabled={false}
+                value={toggleCheckBox}
+                onValueChange={(newValue) => setTodoStatus(newValue, props.id)}
+            />
             <Text style={styles.item}>{props.text}</Text>
             <Text onPress={() => props.onRemove(props.id)} style={styles.close}>&times;</Text>
         </View>
@@ -18,7 +31,8 @@ function TodoItem(props) {
 
 function mapDispatchToProps(dispatch) {
     return {
-        onRemove: payload => dispatch({type: 'REMOVE_TODO', payload})
+        onRemove: payload => dispatch({type: 'REMOVE_TODO', payload}),
+        onComplete: payload => dispatch({type: 'COMPLETE_TODO', payload})
     }
 }
 
@@ -38,7 +52,7 @@ const styles = StyleSheet.create({
         position: 'relative'
     },
     close: {
-        
+        fontSize: 22
     }
 });
 

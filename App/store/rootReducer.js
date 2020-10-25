@@ -25,6 +25,19 @@ export default function rootReducer(state = initialState, action) {
             return {
                 ...state, todos
             }
+
+        case 'COMPLETE_TODO': 
+            const todo = state.todos.map(todo => todo.id === action.payload);
+
+            if(action.payload.value) {
+                todo.done = true;
+            } else {
+                todo.done = false;
+            }
+            
+            console.log(state);
+
+            return state;
     
         default:
            return state;
